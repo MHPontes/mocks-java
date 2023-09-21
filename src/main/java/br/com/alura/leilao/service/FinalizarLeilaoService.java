@@ -12,9 +12,13 @@ import br.com.alura.leilao.model.Leilao;
 @Service
 public class FinalizarLeilaoService {
 
-	@Autowired
 	private LeilaoDao leiloes;
 
+	@Autowired
+	public FinalizarLeilaoService(LeilaoDao leiloes) {             //Sempre que trabalhamos com testes automatizados, é considerada uma boa prática injetar as dependências sempre pelo construtor.
+		                                                         // Isso porque o construtor já deixa óbvio quais as dependências daquela classe e, com ele, conseguimos passar um Mock como parâmetro para os testes. Isso simplifica o processo.
+		this.leiloes = leiloes;
+	}
 	public void finalizarLeiloesExpirados() {
 		List<Leilao> expirados = leiloes.buscarLeiloesExpirados();
 		expirados.forEach(leilao -> {
