@@ -13,11 +13,13 @@ import java.util.List;
 public class FinalizarLeilaoService {
 
 	private LeilaoDao leiloes;
+	private EnviadorDeEmails enviadorDeEmails;
 
 	@Autowired
-	public FinalizarLeilaoService(LeilaoDao leiloes) {             //Sempre que trabalhamos com testes automatizados, é considerada uma boa prática injetar as dependências sempre pelo construtor.
+	public FinalizarLeilaoService(LeilaoDao leiloes, EnviadorDeEmails enviadorDeEmails) {             //Sempre que trabalhamos com testes automatizados, é considerada uma boa prática injetar as dependências sempre pelo construtor.
 		                                                         // Isso porque o construtor já deixa óbvio quais as dependências daquela classe e, com ele, conseguimos passar um Mock como parâmetro para os testes. Isso simplifica o processo.
 		this.leiloes = leiloes;
+		this.enviadorDeEmails = enviadorDeEmails;
 	}
 	public void finalizarLeiloesExpirados() {
 		List<Leilao> expirados = leiloes.buscarLeiloesExpirados();
@@ -26,6 +28,8 @@ public class FinalizarLeilaoService {
 			leilao.setLanceVencedor(maiorLance);
 			leilao.fechar();
 			leiloes.salvar(leilao);
+
+			enviadorDeEmails.enviarEmailVencedorLeilao(maiorLance);
 		});
 	}
 

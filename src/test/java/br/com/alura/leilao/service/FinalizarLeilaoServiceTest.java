@@ -21,11 +21,13 @@ class FinalizarLeilaoServiceTest {
 
     @Mock
     private LeilaoDao leilaoDao;      //Mockando a classe LeiladoDao por anotação, a classe foi mockada pois o metodo de finalizar leilao da classe FinalizarLeilaoService, chama o metodo buscarLeiloesExpirados
+    @Mock
+    private EnviadorDeEmails enviadorDeEmails;
 
     @BeforeEach
     public void beforeEach() {
         MockitoAnnotations.initMocks(this);           //Iniciando os mocks
-        this.service = new FinalizarLeilaoService(leilaoDao);  //Instanciando a service e passando leilaoDao como parametro.
+        this.service = new FinalizarLeilaoService(leilaoDao, enviadorDeEmails);  //Instanciando a service e passando leilaoDao como parametro e enviadorDeEmails
     }
 
     @Test
@@ -42,6 +44,22 @@ class FinalizarLeilaoServiceTest {
         Assertions.assertTrue(leilao.isFechado());
 
         Mockito.verify(leilaoDao).salvar(leilao);    //Assertiva no Mock, validando se ira salvar no banco (testando somente a logica)
+
+    }
+
+    @Test
+    void deveriaEnviarEmailParaVencedorDoLeilao() {
+        List<Leilao> leiloes = leiloes();     //Instanciando a Lista de leiloes numa variavel
+
+        Mockito.when(leilaoDao.buscarLeiloesExpirados())
+                .thenReturn(leiloes);        //Quando o metodo do nosso mock leilaoDao, for chamado, retorna a lista de leiloes criada abaixo
+
+        service.finalizarLeiloesExpirados(); //Metodo a ser testado
+
+        Leilao leilao = leiloes.get(0);
+        Lance lanceVencedor = leilao.getLanceVencedor();
+
+        Mockito.verify(enviadorDeEmails).enviarEmailVencedorLeilao(lanceVencedor);    //Assertiva no Mock, validando se ira enviar email ao vencedor(testando somente a logica)
 
     }
 
