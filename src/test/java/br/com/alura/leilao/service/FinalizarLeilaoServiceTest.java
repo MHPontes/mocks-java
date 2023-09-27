@@ -81,8 +81,6 @@ class FinalizarLeilaoServiceTest {
         }
     }
 
-
-
     // Trecho de código omitido
 
     private List<Leilao> leiloes() {
@@ -103,7 +101,6 @@ class FinalizarLeilaoServiceTest {
         lista.add(leilao);
 
         return lista;
-
 
         //Esse é um método que cria uma lista de leilões em memória. Ele pega uma lista de leilões (List<Leilao> lista = new ArrayList<>()),
         // cria um leilão com um nome qualquer ("Celular"), um lance inicial de R$500 e um usuário chamado Fulano.
