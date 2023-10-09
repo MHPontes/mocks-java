@@ -81,6 +81,8 @@ class FinalizarLeilaoServiceTest {
         }
     }
 
+
+
     // Trecho de código omitido
 
     private List<Leilao> leiloes() {
